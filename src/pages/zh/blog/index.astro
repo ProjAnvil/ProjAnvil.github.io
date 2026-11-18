@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { ui, path } from '../../../data/i18n';
+
+const lang = 'zh';
+const t = ui[lang];
+const posts = (await getCollection('blog', ({ data }) => data.lang === lang))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout lang={lang} title={t.blogPage.title} description={t.blogPage.subtitle} active="blog">
+  <div class="page-head">
+    <div class="container">
+      <p class="section-eyebrow">{t.blogPage.eyebrow}</p>
+      <h1>{t.blogPage.title}</h1>
+      <p>{t.blogPage.subtitle}</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="post-list">
+      {posts.map((post) => (
+        <a class="post-item" href={path(lang, `/blog/${post.id.replace(`${lang}/`, '')}/`)}>
+          <span class="post-date">{post.data.pubDate.toISOString().slice(0, 10)}</span>
+          <div>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+          </div>
+          <span class="post-arrow">{t.blogPage.read} →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

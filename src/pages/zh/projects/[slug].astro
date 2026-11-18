@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { projects, layerLabel, type Project } from '../../../data/projects';
+import { ui, path } from '../../../data/i18n';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props { project: Project }
+const { project } = Astro.props;
+const lang = 'zh';
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={project.name} description={project.summary[lang]} active="products">
+  <div class="project-head">
+    <div class="container">
+      <div class="crumb"><a href={path(lang, '/projects/')}>{t.project.back}</a> / {project.name}</div>
+      <p class="section-eyebrow">{layerLabel[project.layer][lang]}</p>
+      <h1>{project.name}</h1>
+      <p class="lead">{project.summary[lang]}</p>
+    </div>
+  </div>
+
+  <div class="container project-body">
+    <article class="prose">
+      <section>
+        <h2 id="overview">{t.project.overview}</h2>
+        <p>{project.summary[lang]}</p>
+      </section>
+
+      <section>
+        <h2 id="why">{t.project.why}</h2>
+        <p>{project.problem[lang]}</p>
+      </section>
+
+      <section>
+        <h2 id="how">{t.project.how}</h2>
+        {project.install.map((step) => (
+          <>
+            <p class="step-label">{step.label[lang]}</p>
+            <pre><code>{step.code}</code></pre>
+          </>
+        ))}
+        {project.quickstart.map((step) => (
+          <>
+            <p class="step-label">{step.label[lang]}</p>
+            <pre><code>{step.code}</code></pre>
+          </>
+        ))}
+        <p><a href={project.docs} target="_blank" rel="noopener">↗ {t.project.readme}</a></p>
+      </section>
+
+      <section>
+        <h2 id="agents">{t.project.agent}</h2>
+        <div class="agent-box">
+          <p>{project.agentUse[lang]}</p>
+          {project.agentCode && <pre><code>{project.agentCode}</code></pre>}
+        </div>
+      </section>
+    </article>
+
+    <aside class="sidebar">
+      <h3>{t.project.facts}</h3>
+      <div class="fact"><span>{t.project.role}</span><span>{layerLabel[project.layer][lang]}</span></div>
+      <div class="fact"><span>{t.project.language}</span><span>{project.language}</span></div>
+      <div class="fact"><span>{t.project.license}</span><span>MIT</span></div>
+      <div class="fact"><span>{t.project.updated}</span><span>{project.updated}</span></div>
+      <div class="fact"><span>{t.project.stars}</span><span>★ {project.stars}</span></div>
+      <div style="margin-top:16px">
+        <span style="font-size:12px;color:var(--text-faint)">{t.project.topics}</span>
+        <div class="topic-list">{project.topics.map((topic) => <span class="topic">{topic}</span>)}</div>
+      </div>
+      <a class="btn btn-primary" href={`https://github.com/ProjAnvil/${project.repo}`} target="_blank" rel="noopener">{t.project.repo} ↗</a>
+    </aside>
+  </div>
+</BaseLayout>

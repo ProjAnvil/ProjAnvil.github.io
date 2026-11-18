@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { ui, path } from '../../data/i18n';
+import { projects, layerOrder, layerLabel, layerDesc } from '../../data/projects';
+import { getCollection } from 'astro:content';
+
+const lang = 'zh';
+const t = ui[lang];
+const posts = (await getCollection('blog', ({ data }) => data.lang === 'zh'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout lang={lang}>
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">{t.home.eyebrow}</p>
+      <h1>{t.home.title}</h1>
+      <p class="subtitle">{t.home.subtitle}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#architecture">{t.home.ctaPrimary} →</a>
+        <a class="btn btn-secondary" href={path(lang, '/blog/')}>{t.home.ctaSecondary}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="gap">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">01 / THE PROBLEM</p>
+        <h2>{t.home.problemTitle}</h2>
+        <p>{t.home.problemBody}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="axes">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">02 / THE INSIGHT</p>
+        <h2>{t.home.insightTitle}</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <span class="axis-num">01</span><div class="axis-bar"></div>
+          <h3>{t.home.axisCommandTitle}</h3>
+          <p>{t.home.axisCommandBody}</p>
+        </div>
+        <div class="card">
+          <span class="axis-num">02</span><div class="axis-bar"></div>
+          <h3>{t.home.axisSkillTitle}</h3>
+          <p>{t.home.axisSkillBody}</p>
+        </div>
+        <div class="card">
+          <span class="axis-num">03</span><div class="axis-bar"></div>
+          <h3>{t.home.axisConnectTitle}</h3>
+          <p>{t.home.axisConnectBody}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="architecture">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">03 / THE ARCHITECTURE</p>
+        <h2>{t.home.stackTitle}</h2>
+        <p>{t.home.stackBody}</p>
+      </div>
+      <div class="layer-list">
+        {layerOrder.map((layer) => (
+          <div class="layer-row">
+            <div>
+              <div class="layer-name">{layerLabel[layer][lang]}</div>
+              <span class="layer-kind">{layer.toUpperCase()}</span>
+            </div>
+            <div class="layer-body">
+              {layerDesc[layer][lang]}
+              <div style="margin-top:8px">
+                {projects.filter((p) => p.layer === layer).map((p, i) => (
+                  <><span class="layer-sep">{i === 0 ? '' : '·'}</span><a href={path(lang, `/projects/${p.slug}/`)}>{p.name}</a></>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="products">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">04 / PRODUCTS</p>
+        <h2>{t.home.layersTitle}</h2>
+        <p>{ui[lang].projects.subtitle}</p>
+      </div>
+      <div class="project-grid">
+        {projects.map((p) => <ProjectCard project={p} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">05 / FIELD NOTES</p>
+        <h2>{t.home.blogTitle}</h2>
+        <p>{t.home.blogBody}</p>
+      </div>
+      <div class="post-list" style="padding:0">
+        {posts.map((post) => (
+          <a class="post-item" href={path(lang, `/blog/${post.id.replace('zh/', '')}/`)}>
+            <span class="post-date">{post.data.pubDate.toISOString().slice(0, 10)}</span>
+            <div>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </div>
+            <span class="post-arrow">→</span>
+          </a>
+        ))}
+      </div>
+      <p style="margin-top:26px"><a class="btn btn-secondary" href={path(lang, '/blog/')}>{t.home.allPosts} →</a></p>
+    </div>
+  </section>
+
+  <section class="banner">
+    <div class="container">
+      <div>
+        <h2>{t.home.ctaBannerTitle}</h2>
+        <p>{t.home.ctaBannerBody}</p>
+      </div>
+      <a class="btn btn-primary" href="https://github.com/orgs/ProjAnvil/repositories" target="_blank" rel="noopener">{t.home.ctaBannerLink} ↗</a>
+    </div>
+  </section>
+</BaseLayout>

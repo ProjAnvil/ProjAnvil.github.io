@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import { ui, path, type Lang } from '../data/i18n';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  active?: 'products' | 'blog' | 'architecture';
+}
+
+const { lang, title, description, active } = Astro.props;
+const t = ui[lang];
+const fullTitle = title ? `${title} · ProjAnvil` : `ProjAnvil · ${t.brandTagline}`;
+const fullDesc = description ?? t.home.subtitle;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={fullDesc} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={fullDesc} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="en" href={new URL(path('en', Astro.url.pathname.replace(/^\/zh/, '') || '/'), Astro.site).href} />
+    <link rel="alternate" hreflang="zh" href={new URL(path('zh', Astro.url.pathname.replace(/^\/zh/, '') || '/'), Astro.site).href} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href={path(lang, '/')}>
+          <span><span class="brand-mark">◆</span> ProjAnvil</span>
+          <span class="brand-tag">{t.brandTagline}</span>
+        </a>
+        <nav class="nav">
+          <a href={`${path(lang, '/')}#products`} class={active === 'products' ? 'active' : ''}>{t.nav.products}</a>
+          <a href={`${path(lang, '/')}#architecture`} class={active === 'architecture' ? 'active' : ''}>{t.nav.architecture}</a>
+          <a href={path(lang, '/blog/')} class={active === 'blog' ? 'active' : ''}>{t.nav.blog}</a>
+          <a href="https://github.com/orgs/ProjAnvil/repositories" target="_blank" rel="noopener">{t.nav.github} ↗</a>
+          <a class="lang-switch" href={t.langHref} lang={lang === 'en' ? 'zh' : 'en'}>{t.langLabel}</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>{t.footer.made}</span>
+        <span>{t.footer.line}</span>
+      </div>
+    </footer>
+  </body>
+</html>

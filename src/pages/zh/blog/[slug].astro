@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { ui, path } from '../../../data/i18n';
+
+const lang = 'zh';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.lang === 'zh');
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/^zh\//, '') },
+    props: { post },
+  }));
+}
+
+interface Props { post: CollectionEntry<'blog'> }
+const { post } = Astro.props;
+const t = ui[lang];
+const { Content } = await render(post);
+const words = post.body.trim().split(/\s+/).length;
+const minutes = Math.max(1, Math.round(words / 220));
+---
+
+<BaseLayout lang={lang} title={post.data.title} description={post.data.description} active="blog">
+  <article class="article">
+    <div class="article-head">
+      <p class="section-eyebrow">{t.blogPage.eyebrow}</p>
+      <h1>{post.data.title}</h1>
+      <div class="article-meta">
+        {t.blogPage.published} {post.data.pubDate.toISOString().slice(0, 10)}
+        &nbsp;·&nbsp; {minutes} {t.blogPage.minRead}
+        {post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
+      </div>
+    </div>
+    <div class="prose"><Content /></div>
+    <div class="article-foot"><a href={path(lang, '/blog/')}>← {t.blogPage.back}</a></div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { ui } from '../../data/i18n';
+import { projects } from '../../data/projects';
+
+const lang = 'en';
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={t.projects.title} description={t.projects.subtitle} active="products">
+  <div class="page-head">
+    <div class="container">
+      <p class="section-eyebrow">{t.projects.eyebrow}</p>
+      <h1>{t.projects.title}</h1>
+      <p>{t.projects.subtitle}</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="project-grid">
+      {projects.map((p) => <ProjectCard project={p} lang={lang} />)}
+    </div>
+  </div>
+</BaseLayout>

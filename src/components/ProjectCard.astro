@@ -1,0 +1,22 @@
+---
+import type { Project } from '../data/projects';
+import { layerLabel } from '../data/projects';
+import { path, ui, type Lang } from '../data/i18n';
+
+interface Props { project: Project; lang: Lang }
+const { project, lang } = Astro.props;
+const t = ui[lang];
+---
+
+<a class="project-card" href={path(lang, `/projects/${project.slug}/`)}>
+  <div class="project-card-top">
+    <span class="badge">{layerLabel[project.layer][lang]}</span>
+    <span class="stars">★ {project.stars}</span>
+  </div>
+  <h3>{project.name}</h3>
+  <p>{project.summary[lang]}</p>
+  <div class="project-card-foot">
+    <span>{project.language}</span>
+    <span>{t.project.overview} →</span>
+  </div>
+</a>
