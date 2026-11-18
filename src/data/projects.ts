@@ -25,7 +25,6 @@ export const layerOrder = [
   'Runtime',
   'Skill',
   'Knowledge',
-  'Intent',
   'Context',
   'Memory',
   'Foundation',
@@ -39,7 +38,6 @@ export const layerLabel: Record<string, Text> = {
   Runtime: { en: 'Runtime', zh: '运行时' },
   Skill: { en: 'Skill layer', zh: '技能层' },
   Knowledge: { en: 'Knowledge layer', zh: '知识层' },
-  Intent: { en: 'Intent layer', zh: '意图层' },
   Context: { en: 'Context layer', zh: '上下文层' },
   Memory: { en: 'Memory layer', zh: '记忆层' },
   Foundation: { en: 'Foundation', zh: '基础库' },
@@ -61,10 +59,6 @@ export const layerDesc: Record<string, Text> = {
   Knowledge: {
     en: 'A machine-readable description of the codebase an agent must work in.',
     zh: '把 agent 要修改的代码库，转成机器可读的结构化描述。',
-  },
-  Intent: {
-    en: 'The bridge from a product requirement to an engineering specification.',
-    zh: '把产品需求翻译成工程规格的桥梁。',
   },
   Context: {
     en: 'Live access to your API contracts, from documentation to MCP tools.',
@@ -91,8 +85,8 @@ export const layerDesc: Record<string, Text> = {
     zh: '可通过 MCP 查询的内存图基础设施。',
   },
   Application: {
-    en: 'Real products built on the stack, proving the layers work together.',
-    zh: '基于这套技术栈构建的真实产品，验证各层协同工作。',
+    en: 'Standalone applications, some built on the stack and some using it as a knowledge source.',
+    zh: '独立应用，有的基于这套技术栈构建，有的把它作为知识来源。',
   },
 };
 
@@ -196,7 +190,7 @@ export const projects: Project[] = [
     slug: 'porto',
     name: 'Porto',
     repo: 'Porto',
-    layer: 'Intent',
+    layer: 'Application',
     language: 'Python',
     stars: 0,
     topics: ['requirements-analysis', 'agent', 'specs'],
